@@ -1,5 +1,6 @@
 package com.android.video.decode.test
 
+import android.app.Activity
 import android.content.Context
 import android.media.AudioManager
 import android.net.Uri
@@ -11,8 +12,11 @@ import android.widget.BaseAdapter
 import android.widget.MediaController
 import android.widget.VideoView
 import java.util.*
+import android.util.DisplayMetrics
 
-class VideoAdapter(val context: Context, var videoList : ArrayList<String>) : BaseAdapter() {
+
+
+class VideoAdapter(val context: Context, var videoList : ArrayList<String>, val numCols : Int) : BaseAdapter() {
     var viewMap = HashMap<Int, VideoView>()
     private var handler = Handler()
     private val TAG = "VideoAdapter"
@@ -20,6 +24,13 @@ class VideoAdapter(val context: Context, var videoList : ArrayList<String>) : Ba
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var vidView = VideoView(context)
         viewMap.put(position, vidView)
+
+        val displayMetrics = DisplayMetrics()
+        (context as Activity).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+        val vidHeight = displayMetrics.heightPixels/numCols
+        val vidWidth = displayMetrics.widthPixels/numCols
+
+        vidView.setLayoutParams(ViewGroup.LayoutParams(vidWidth, vidHeight))
         return vidView
     }
 

@@ -9,6 +9,9 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.ceil;
+import static java.lang.Math.sqrt;
+
 enum Resolution
 {
     R240, R480, R720, R1080;
@@ -22,6 +25,10 @@ public class DecodeActivity extends Activity {
     private int mNumVids = 4;
     private VideoAdapter mVideoAdapter = null;
 
+    private int calcAutoGridSize(int numVids){
+        return (int) ceil(sqrt(numVids));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +39,6 @@ public class DecodeActivity extends Activity {
         setContentView(R.layout.video_grid);
 
         AudioManager amanager=(AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
         amanager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
         amanager.setStreamMute(AudioManager.STREAM_ALARM, true);
         amanager.setStreamMute(AudioManager.STREAM_MUSIC, true);
@@ -64,8 +70,10 @@ public class DecodeActivity extends Activity {
             e.printStackTrace();
         }
 
+        int numCols = calcAutoGridSize(mNumVids);
         GridView gridView = findViewById(R.id.gridview);
-        mVideoAdapter = new VideoAdapter(this, mVideoFileList);
+        mVideoAdapter = new VideoAdapter(this, mVideoFileList, numCols);
+        gridView.setNumColumns(numCols);
         gridView.setAdapter(mVideoAdapter);
 
         mVideoAdapter.playVids(mNumVids);
