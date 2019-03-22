@@ -17,7 +17,6 @@ public class DecodeProvider extends ContentProvider {
 
     @Override
     public AssetFileDescriptor openAssetFile(Uri uri, String mode) throws FileNotFoundException {
-        Log.d("Content Provider","Content Provider");
         AssetManager am = getContext().getAssets();
         List<String> segs = uri.getPathSegments();
         String file_name = segs.get(segs.size()-2) +"/"+segs.get(segs.size()-1);
