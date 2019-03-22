@@ -2,6 +2,7 @@ package com.android.video.decode.test;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,12 @@ public class DecodeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_grid);
+
+        Intent intent = getIntent();
+        mNumVids = intent.getIntExtra(SelectActivity.EXTRA_NUM_STREAMS, 6);
+        mRes = (Resolution) intent.getSerializableExtra(SelectActivity.EXTRA_RESOLUTION);
+        Log.i(TAG,"will play "+mNumVids+" with resolution enum "+mRes);
+
         mVideoFileList = new ArrayList<>();
 
         super.onCreate(savedInstanceState);
