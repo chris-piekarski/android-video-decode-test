@@ -18,11 +18,18 @@ enum Resolution
     R240, R480, R720, R1080;
 }
 
+enum FPS
+{
+    R15, R30
+}
+
 public class DecodeActivity extends Activity {
     private final String TAG = "DecodeActivity";
     private ArrayList<String> mVideoFileList;
 
     private Resolution mRes = Resolution.R240;
+    private FPS mFPS = FPS.R30;
+
     private int mNumVids = 4;
     private VideoAdapter mVideoAdapter = null;
 
@@ -38,7 +45,8 @@ public class DecodeActivity extends Activity {
         Intent intent = getIntent();
         mNumVids = intent.getIntExtra(SelectActivity.EXTRA_NUM_STREAMS, 6);
         mRes = (Resolution) intent.getSerializableExtra(SelectActivity.EXTRA_RESOLUTION);
-        Log.i(TAG,"will play "+mNumVids+" with resolution enum "+mRes);
+        mFPS = (FPS) intent.getSerializableExtra(SelectActivity.EXTRA_FPS);
+        Log.i(TAG,"will play "+mNumVids+" with resolution enum "+mRes+" and fps "+mFPS);
 
         mVideoFileList = new ArrayList<>();
 
@@ -53,18 +61,23 @@ public class DecodeActivity extends Activity {
         amanager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
         String vidFile = "content://com.android.video.decode.test.provider";
+        String fps = "30fps";
+        if(mFPS == FPS.R15) {
+            fps = "15fps";
+        }
+
         switch(mRes) {
             case R240:
-                vidFile = "content://com.android.video.decode.test.provider/30fps/Footage240.mp4";
+                vidFile = "content://com.android.video.decode.test.provider/"+fps+"/Footage240.mp4";
                 break;
             case R480:
-                vidFile = "content://com.android.video.decode.test.provider/30fps/Footage480.mp4";
+                vidFile = "content://com.android.video.decode.test.provider/"+fps+"/Footage480.mp4";
                 break;
             case R720:
-                vidFile = "content://com.android.video.decode.test.provider/30fps/Footage720.mp4";
+                vidFile = "content://com.android.video.decode.test.provider/"+fps+"/Footage720.mp4";
                 break;
             case R1080:
-                vidFile = "content://com.android.video.decode.test.provider/30fps/Footage1080.mp4";
+                vidFile = "content://com.android.video.decode.test.provider/"+fps+"/Footage1080.mp4";
                 break;
         }
 

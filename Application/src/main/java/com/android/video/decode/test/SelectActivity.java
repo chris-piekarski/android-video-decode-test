@@ -16,10 +16,12 @@ import java.io.Serializable;
 public class SelectActivity extends Activity {
     private final String TAG = "SelectActivity";
     private Resolution mResolution = Resolution.R240;
+    private FPS mFPS = FPS.R30;
     private int mNumStreams = 6;
 
     final static String EXTRA_RESOLUTION = "RESOLUTION";
     final static String EXTRA_NUM_STREAMS = "NUM_STREAMS";
+    final static String EXTRA_FPS = "FPS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +77,34 @@ public class SelectActivity extends Activity {
             }
         });
 
+        RadioGroup rfpsGroup = (RadioGroup)findViewById(R.id.fps);
+        rfpsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                boolean isChecked = checkedRadioButton.isChecked();
+                if (isChecked)
+                {
+                    switch (checkedId) {
+                        case R.id.fps15:
+                            mFPS = FPS.R15;
+                            break;
+                        case R.id.fps30:
+                            mFPS = FPS.R30;
+                            break;
+                    }
+                }
+            }
+        });
+
 
         final Button button = findViewById(R.id.start);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),DecodeActivity.class);
                 intent.putExtra(EXTRA_RESOLUTION, (Serializable) mResolution);
+                intent.putExtra(EXTRA_FPS, (Serializable) mFPS);
                 intent.putExtra(EXTRA_NUM_STREAMS, mNumStreams);
                 startActivity(intent);
             }
