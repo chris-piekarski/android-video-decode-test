@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.media.MediaCodec
+import android.media.MediaCodecList
 import android.media.MediaExtractor
 import android.media.MediaFormat
-import android.net.Uri
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Surface
@@ -18,7 +18,7 @@ import java.util.*
 
 
 class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols: Int) : BaseVideoAdapter(context, videoList, numCols) {
-    private val TAG = "MediaCodecAdapter"
+    private val TAG = "asdfasdfMediaCodecAdapter"
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var vidView = SurfaceView(context)
@@ -35,13 +35,25 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
 
     override fun loadAndPlay(vv: View, videoPath: String) {
         Log.d(TAG, "loading video file $videoPath")
+        //listAllCodecNames()
 
         var afd = context.getAssets().openFd("30fps/Footage720.mp4")
-        var player = PlayerThread((vv as SurfaceView).holder.surface, afd);
+        var player = PlayerThread((vv as SurfaceView).holder.surface, afd, "OMX.google.h264.decoder");
         player.start()
     }
 
-    private inner class PlayerThread(private val surface: Surface, private val fileUri: AssetFileDescriptor) : Thread() {
+    private fun listAllCodecNames() {
+        Log.e(TAG, "Listing out available codecs: ")
+        val numCodecs = MediaCodecList.getCodecCount()
+        for (i in 0 until numCodecs) {
+            val codecInfo = MediaCodecList.getCodecInfoAt(i)
+            Log.e(TAG, codecInfo.name)
+            codecInfo.name
+
+        }
+    }
+
+    private inner class PlayerThread(private val surface: Surface, private val fileUri: AssetFileDescriptor, private val codecName:String? = null) : Thread() {
         private var extractor: MediaExtractor? = null
         private var decoder: MediaCodec? = null
 
@@ -59,7 +71,12 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
                 if (mime.startsWith("video/")) {
                     extractor!!.selectTrack(i)
                     try {
-                        decoder = MediaCodec.createDecoderByType(mime)
+                        if(codecName != null) {
+                            Log.d(TAG, "Creating instance of requested codec: " + codecName)
+                            decoder = MediaCodec.createByCodecName(codecName)
+                        }else {
+                            decoder = MediaCodec.createDecoderByType(mime)
+                        }
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
