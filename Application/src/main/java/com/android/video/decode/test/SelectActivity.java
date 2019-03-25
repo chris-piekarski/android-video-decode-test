@@ -2,7 +2,10 @@ package com.android.video.decode.test;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaCodecInfo;
+import android.media.MediaCodecList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -27,6 +30,8 @@ public class SelectActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_layout);
+
+        showDeviceDecoderInfo();
 
         final TextView cv = (TextView) findViewById(R.id.numStreamsText);
         final SeekBar sk = (SeekBar) findViewById(R.id.numStreamSeek);
@@ -109,6 +114,32 @@ public class SelectActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void showDeviceDecoderInfo() {
+
+        int mediaCodecCount = MediaCodecList.getCodecCount();
+
+        for (int i = 0; i < mediaCodecCount; ++i) {
+            MediaCodecInfo mediaCodecInfo = MediaCodecList.getCodecInfoAt(i);
+            if (mediaCodecInfo.isEncoder()) {
+                continue;
+            }
+
+            Log.e(TAG, "CodecName:" + mediaCodecInfo.getName());
+            String [] types = mediaCodecInfo.getSupportedTypes();
+
+            String strTypes = "";
+            for (int j = 0; j < types.length; ++j) {
+                if (!strTypes.isEmpty()) {
+                    String SPLITE = ",  ";
+                    strTypes += SPLITE;
+                }
+                strTypes += types[j];
+            }
+
+            Log.e(TAG, "Support Type:$strTypes");
+        }
     }
 
 }
