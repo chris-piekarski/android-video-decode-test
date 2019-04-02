@@ -71,6 +71,9 @@ public class SelectActivity extends Activity {
                         case R.id.r480p:
                             mResolution = Resolution.R480;
                             break;
+                        case R.id.r576p:
+                            mResolution = Resolution.R576;
+                            break;
                         case R.id.r720p:
                             mResolution = Resolution.R720;
                             break;

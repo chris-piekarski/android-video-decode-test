@@ -38,7 +38,7 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
         //listAllCodecNames()
 
         var afd = context.getAssets().openFd("30fps/Footage720.mp4")
-        var player = PlayerThread((vv as SurfaceView).holder.surface, afd, "OMX.google.h264.decoder");
+        var player = PlayerThread((vv as SurfaceView).holder.surface, afd, "OMX.qcom.video.decoder.avc");
         player.start()
     }
 

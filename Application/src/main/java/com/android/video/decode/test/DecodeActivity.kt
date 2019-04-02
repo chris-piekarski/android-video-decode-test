@@ -14,7 +14,7 @@ import java.lang.Math.ceil
 import java.lang.Math.sqrt
 
 internal enum class Resolution {
-    R240, R480, R720, R1080
+    R240, R480, R576, R720, R1080
 }
 
 internal enum class FPS {
@@ -63,6 +63,7 @@ class DecodeActivity : Activity() {
         when (mRes) {
             Resolution.R240 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage240.mp4"
             Resolution.R480 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage480.mp4"
+            Resolution.R576 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage576.mp4"
             Resolution.R720 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage720.mp4"
             Resolution.R1080 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage1080.mp4"
         }
@@ -78,8 +79,8 @@ class DecodeActivity : Activity() {
 
         val numCols = calcAutoGridSize(mNumVids)
         val gridView = findViewById(R.id.gridview) as GridView
-        //mVideoAdapter = VideoViewAdapter(this, mVideoFileList!!, numCols)
-        mVideoAdapter = MediaCodecAdapter(this, mVideoFileList!!, numCols)
+        mVideoAdapter = VideoViewAdapter(this, mVideoFileList!!, numCols)
+        //mVideoAdapter = MediaCodecAdapter(this, mVideoFileList!!, numCols)
         gridView.numColumns = numCols
         gridView.adapter = mVideoAdapter
 
