@@ -64,10 +64,11 @@ class DecodeActivity : Activity() {
         }
 
         when (mRes) {
-            Resolution.R240 -> vidFile = ASSET_URI + "$fps/Footage240.mp4"
-            Resolution.R480 -> vidFile = ASSET_URI + "$fps/Footage480.mp4"
-            Resolution.R720 -> vidFile = ASSET_URI + "$fps/Footage720.mp4"
-            Resolution.R1080 -> vidFile = ASSET_URI + "$fps/Footage1080.mp4"
+            Resolution.R240 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage240.mp4"
+            Resolution.R480 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage480.mp4"
+            Resolution.R576 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage576.mp4"
+            Resolution.R720 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage720.mp4"
+            Resolution.R1080 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage1080.mp4"
         }
 
 //        mVideoFileList!!.add("rtsp://192.168.1.11:7447/i1ydjtJ05GSyUG61")
