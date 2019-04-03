@@ -36,8 +36,6 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
     override fun loadAndPlay(vv: View, videoPath: String) {
         Log.d(TAG, "loading video file $videoPath")
         //listAllCodecNames()
-
-
     }
 
     private fun listAllCodecNames() {
