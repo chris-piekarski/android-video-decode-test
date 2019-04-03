@@ -6,4 +6,5 @@
     android:columnWidth="0dp"
     android:verticalSpacing="0dp"
     android:horizontalSpacing="0dp"
+    android:keepScreenOn="true"
     xmlns:android="http://schemas.android.com/apk/res/android" />

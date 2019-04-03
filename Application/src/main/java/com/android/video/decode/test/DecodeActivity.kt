@@ -31,6 +31,10 @@ class DecodeActivity : Activity() {
     private var mNumVids = 4
     private var mVideoAdapter: BaseVideoAdapter? = null
 
+    companion object {
+        val ASSET_URI = "content://com.android.video.decode.test.provider/"
+    }
+
     private fun calcAutoGridSize(numVids: Int): Int {
         return ceil(sqrt(numVids.toDouble())).toInt()
     }
@@ -43,7 +47,6 @@ class DecodeActivity : Activity() {
         mNumVids = intent.getIntExtra(SelectActivity.EXTRA_NUM_STREAMS, 6)
         mRes = intent.getSerializableExtra(SelectActivity.EXTRA_RESOLUTION) as Resolution
         mFPS = intent.getSerializableExtra(SelectActivity.EXTRA_FPS) as FPS
-        Log.i(TAG, "will play $mNumVids with resolution enum $mRes and fps $mFPS")
 
         mVideoFileList = ArrayList()
 
@@ -61,11 +64,28 @@ class DecodeActivity : Activity() {
         }
 
         when (mRes) {
-            Resolution.R240 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage240.mp4"
-            Resolution.R480 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage480.mp4"
-            Resolution.R720 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage720.mp4"
-            Resolution.R1080 -> vidFile = "content://com.android.video.decode.test.provider/$fps/Footage1080.mp4"
+            Resolution.R240 -> vidFile = ASSET_URI + "$fps/Footage240.mp4"
+            Resolution.R480 -> vidFile = ASSET_URI + "$fps/Footage480.mp4"
+            Resolution.R720 -> vidFile = ASSET_URI + "$fps/Footage720.mp4"
+            Resolution.R1080 -> vidFile = ASSET_URI + "$fps/Footage1080.mp4"
         }
+
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/i1ydjtJ05GSyUG61")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/aqvLQsyrr2M0hFgA")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/a875k0hDEx2zcanE")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/yzxMoKmOxRlHFFY9")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/oqP42ITNF8v2RDmh")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/kgsC6ksd4TTltGzY")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/WP59IvUDSAtUBMlj")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/FFj0PzIfJnoQOFAb")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/lgDidy5zVj0AzY6L")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/lTXy0upDl3Er7nJG")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/CsVKYimgqyYZrgAT")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/VZZOVAk5ckrmu0f6")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/fToXUhG5ufRgz13F")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/gHctQPVgGZTEzKwg")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/7x1nEgf7Eo2bYMOg")
+//        mVideoFileList!!.add("rtsp://192.168.1.11:7447/6cILsqpOdFFUBgao")
 
         try {
             for (i in 0 until mNumVids) {
