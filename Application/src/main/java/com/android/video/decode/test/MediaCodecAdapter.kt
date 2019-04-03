@@ -9,19 +9,19 @@ import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Surface
-import android.view.SurfaceView
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import java.io.IOException
 import java.util.*
+import android.view.SurfaceHolder
+import android.view.SurfaceView
+import com.android.video.decode.test.DecodeActivity.Companion.ASSET_URI
 
 
 class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols: Int) : BaseVideoAdapter(context, videoList, numCols) {
     private val TAG = "asdfasdfMediaCodecAdapter"
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var vidView = SurfaceView(context)
+        var vidView = Preview(context)
         viewMap.put(position, vidView)
 
         val displayMetrics = DisplayMetrics()
@@ -36,10 +36,6 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
     override fun loadAndPlay(vv: View, videoPath: String) {
         Log.d(TAG, "loading video file $videoPath")
         //listAllCodecNames()
-
-        var afd = context.getAssets().openFd("30fps/Footage720.mp4")
-        var player = PlayerThread((vv as SurfaceView).holder.surface, afd, "OMX.qcom.video.decoder.avc");
-        player.start()
     }
 
     private fun listAllCodecNames() {
@@ -52,6 +48,47 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
 
         }
     }
+
+
+    internal inner class Preview(context: Context) : SurfaceView(context), SurfaceHolder.Callback {
+        private var numStreams = 0
+
+        init {
+            numStreams = 0
+            Log.d(TAG, "Preview()")
+            val holder = holder
+            holder.addCallback(this)
+            holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
+        }
+
+        override fun surfaceCreated(holder: SurfaceHolder) {
+            Log.d(TAG, "surfaceCreated")
+            var afd = context.getAssets().openFd("15fps/Footage480.mp4")
+            var player:PlayerThread? = null
+//            if(numStreams < 5) {
+//                player = PlayerThread(holder.surface, afd, "OMX.google.h264.decoder")
+//            } else {
+                player = PlayerThread(holder.surface, afd, "OMX.qcom.video.decoder.avc")
+//            }
+            numStreams++
+            player?.start()
+        }
+
+        override fun surfaceDestroyed(holder: SurfaceHolder) {
+            Log.d(TAG, "surfaceDestroyed")
+        }
+
+        override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
+            Log.d(TAG, "surfaceChanged")
+        }
+    }
+
+
+
+
+
+
+
 
     private inner class PlayerThread(private val surface: Surface, private val fileUri: AssetFileDescriptor, private val codecName:String? = null) : Thread() {
         private var extractor: MediaExtractor? = null
@@ -101,7 +138,7 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
 
             while (!Thread.interrupted()) {
                 if (!isEOS) {
-                    val inIndex = decoder!!.dequeueInputBuffer(10000)
+                    val inIndex = decoder!!.dequeueInputBuffer(100000)
                     if (inIndex >= 0) {
                         val buffer = inputBuffers[inIndex]
                         val sampleSize = extractor!!.readSampleData(buffer, 0)
@@ -119,7 +156,7 @@ class MediaCodecAdapter(context: Context, videoList: ArrayList<String>, numCols:
                     }
                 }
 
-                val outIndex = decoder!!.dequeueOutputBuffer(info, 10000)
+                val outIndex = decoder!!.dequeueOutputBuffer(info, 100000)
                 when (outIndex) {
                     MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
                         Log.d("DecodeActivity", "INFO_OUTPUT_BUFFERS_CHANGED")
